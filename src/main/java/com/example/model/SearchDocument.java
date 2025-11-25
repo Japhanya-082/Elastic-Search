@@ -1,0 +1,30 @@
+package com.example.model;
+
+import co.elastic.clients.elasticsearch._types.mapping.Property;
+import co.elastic.clients.elasticsearch._types.mapping.TextProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Document(indexName = "search_index")
+public class SearchDocument {
+
+    @Id
+    private String id;
+
+    @Field(type = FieldType.Text)
+    private String title;
+
+    @Field(type = FieldType.Text)
+    private String description;
+
+    @Field(type = FieldType.Text)
+    private String searchableText;
+}
