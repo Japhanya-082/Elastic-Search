@@ -1,10 +1,10 @@
 package com.example.repository;
 
-import com.example.model.SearchDocument;
+import java.util.List;
+
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-
-import java.util.List;
+import com.example.model.SearchDocument;
 
 public interface SearchRepository extends ElasticsearchRepository<SearchDocument, String> {
     List<SearchDocument> findBySearchableTextContaining(String keyword);

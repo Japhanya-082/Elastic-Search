@@ -14,7 +14,7 @@ import com.example.model.SearchDocument;
 import com.example.serviceImpl.SearchServiceImpl;
 
 @RestController
-@RequestMapping("/global/search")
+ 
 public class SearchController {
 
     @Autowired
