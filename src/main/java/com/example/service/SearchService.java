@@ -6,6 +6,9 @@ import com.example.model.SearchDocument;
 
 public interface SearchService {
 
-	 SearchDocument index(SearchDocument doc);
-	    List<SearchDocument> globalSearch(String keyword, int size);
+	public SearchDocument index(Object entity, String serviceName, String sourceType, String sourceId);
+	
+	 // ADD THIS OVERLOAD ↓
+    SearchDocument index(SearchDocument document);
+	 public List<SearchDocument> globalSearch(String keyword, int page, int size);
 }

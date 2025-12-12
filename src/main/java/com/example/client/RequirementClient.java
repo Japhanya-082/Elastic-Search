@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.example.config.FeignClientConfig;
 import com.example.dto.ExportWrapper;
 
-@FeignClient(name = "AUTH-SERVICE", configuration = FeignClientConfig.class)
-public interface AuthClient {
-	
-	@GetMapping("/search-export/all")
-	List<ExportWrapper> exportAll();
+@FeignClient(name = "REQUIREMENT-SERVICE")
+public interface RequirementClient {
 
+	@GetMapping("/requirement/search-export/all")
+	List<ExportWrapper> exportAll();
 }

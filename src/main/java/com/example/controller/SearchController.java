@@ -11,14 +11,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.model.SearchDocument;
-import com.example.serviceImpl.SearchServiceImpl;
+import com.example.service.SearchService;
+
 
 @RestController
  
 public class SearchController {
 
     @Autowired
-    private SearchServiceImpl serviceImpl;
+    private SearchService serviceImpl;
 
     @PostMapping("/index")
     public ResponseEntity<SearchDocument> index(@RequestBody SearchDocument document) {
@@ -28,8 +29,9 @@ public class SearchController {
 
     @GetMapping("/getData")
     public ResponseEntity<List<SearchDocument>> search(@RequestParam String keyword,
-                                                       @RequestParam(defaultValue = "20") int size) {
-        List<SearchDocument> results = serviceImpl.globalSearch(keyword, size);
+    		                                           @RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "50") int size) {
+        List<SearchDocument> results = serviceImpl.globalSearch(keyword, page, size);
         return ResponseEntity.ok(results);
     }
 }

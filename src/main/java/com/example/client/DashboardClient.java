@@ -6,12 +6,11 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.example.config.FeignClientConfig;
-import com.example.dto.ExportWrapper;
 
-@FeignClient(name = "AUTH-SERVICE", configuration = FeignClientConfig.class)
-public interface AuthClient {
+@FeignClient(name = "DASHBOARD-SERVICE", configuration = FeignClientConfig.class)
+public interface DashboardClient {
 	
-	@GetMapping("/search-export/all")
-	List<ExportWrapper> exportAll();
+	@GetMapping("/dashboard/search-export/all")
+	List<Object> exportAll();
 
 }

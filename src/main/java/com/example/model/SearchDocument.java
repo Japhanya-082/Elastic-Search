@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(indexName = "search_index")
+//@Document(indexName = "search_index")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchDocument {
 
@@ -29,4 +29,22 @@ public class SearchDocument {
 
     @Field(type = FieldType.Text)
     private String searchableText;
+    
+ // exact match for numbers (phone, mobile, ID, etc.)
+    @Field(type = FieldType.Keyword)
+    private String searchableTextExact;
+    
+    //Which Table Record
+    @Field(type = FieldType.Keyword)
+    private String sourceType;//source of the table.
+    
+    @Field( type = FieldType.Keyword)
+    private String sourceId;
+    
+    @Field( type = FieldType.Keyword)
+    private String serviceName;
 }
+
+
+
+
