@@ -29,9 +29,10 @@ public class SearchController {
 
     @GetMapping("/getData")
     public ResponseEntity<List<SearchDocument>> search(@RequestParam String keyword,
+    		                                           @RequestParam(required = false) List<String> services,
     		                                           @RequestParam(defaultValue = "0") int page,
                                                        @RequestParam(defaultValue = "50") int size) {
-        List<SearchDocument> results = serviceImpl.globalSearch(keyword, page, size);
+        List<SearchDocument> results = serviceImpl.globalSearch(keyword, page, size,services);
         return ResponseEntity.ok(results);
     }
 }

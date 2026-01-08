@@ -11,6 +11,7 @@ import com.example.model.SearchDocument;
 import com.example.service.SearchService;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
@@ -90,13 +91,18 @@ public class SearchServiceImpl implements SearchService {
     // -------------------- SEARCH ----------------------- //
 
     @Override
-    public List<SearchDocument> globalSearch(String keyword, int page, int size) {
+    public List<SearchDocument> globalSearch(
+            String keyword,
+            int page,
+            int size,
+            List<String> services) {
+
         if (keyword == null || keyword.isBlank()) return List.of();
 
-        String cleaned = keyword.trim().replaceAll("\\s+", " ");  // avoid regex escaping
+        String cleaned = keyword.trim().replaceAll("\\s+", " ");
 
         try {
-            Query query = buildQuery(cleaned);
+            Query query = buildQuery(cleaned, services);
             if (query == null) return List.of();
 
             SearchResponse<SearchDocument> response =
@@ -150,27 +156,45 @@ public class SearchServiceImpl implements SearchService {
 
     // -------------------- QUERY BUILDER ------------------ //
 
-    private Query buildQuery(String keyword) {
+    private Query buildQuery(String keyword, List<String> services) {
 
-        BoolQuery.Builder boolBuilder = new BoolQuery.Builder();
+        BoolQuery.Builder bool = new BoolQuery.Builder();
 
+        // -------- keyword logic --------
         if (keyword.toUpperCase().contains(" AND ")) {
             String[] terms = keyword.split("(?i)\\s+AND\\s+");
             for (String term : terms) {
-                boolBuilder.must(buildMultiFieldQuery(term.trim()));
+                bool.must(buildMultiFieldQuery(term.trim()));
             }
-            return boolBuilder.build()._toQuery();
-        }
 
-        if (keyword.toUpperCase().contains(" OR ")) {
+        } else if (keyword.toUpperCase().contains(" OR ")) {
             String[] terms = keyword.split("(?i)\\s+OR\\s+");
             for (String term : terms) {
-                boolBuilder.should(buildMultiFieldQuery(term.trim()));
+                bool.should(buildMultiFieldQuery(term.trim()));
             }
-            return boolBuilder.build()._toQuery();
+
+            // IMPORTANT: enforce OR behavior
+            bool.minimumShouldMatch("1");
+
+        } else {
+            bool.must(buildMultiFieldQuery(keyword));
         }
 
-        return buildMultiFieldQuery(keyword);
+        // -------- service filter --------
+        if (services != null && !services.isEmpty()) {
+            bool.filter(f -> f
+                .terms(t -> t
+                    .field("serviceName.keyword")
+                    .terms(v -> v.value(
+                        services.stream()
+                                .map(FieldValue::of)
+                                .toList()
+                    ))
+                )
+            );
+        }
+
+        return bool.build()._toQuery();
     }
 
     private Query buildMultiFieldQuery(String term) {

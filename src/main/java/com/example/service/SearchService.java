@@ -10,5 +10,5 @@ public interface SearchService {
 	
 	 // ADD THIS OVERLOAD ↓
     SearchDocument index(SearchDocument document);
-	 public List<SearchDocument> globalSearch(String keyword, int page, int size);
+    public List<SearchDocument> globalSearch(String keyword, int page, int size,  List<String> services);
 }
