@@ -14,4 +14,10 @@ import com.example.dto.PaginatedExportResponse;
 		    PaginatedExportResponse exportAll(@RequestParam String entity,
 		    		                          @RequestParam(defaultValue = "0") int page,
 		    		                          @RequestParam(defaultValue = "20000") int size);
+		    
+		    @GetMapping("/openreqs/incremental")
+		    PaginatedExportResponse exportIncremental(@RequestParam String entity,
+		                                              @RequestParam String since,
+		                                              @RequestParam(defaultValue = "0") int page,
+		                                              @RequestParam(defaultValue = "500") int size);
 		}
